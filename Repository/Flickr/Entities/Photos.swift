@@ -25,9 +25,14 @@ struct Photos: Decodable {
 
 extension PhotosWrapper {
     
+    var pages: UInt { return photos.pages }
+    
+    var imageIds: [UInt] {
+        return photos.photo.map { UInt($0.id)! }
+    }
+    
     var gallery: Gallery {
-        let photoIds = photos.photo.map { UInt($0.id)! }
-        let images = photoIds.map { Image(id: $0) }
+        let images = imageIds.map { Image(id: $0) }
         return Gallery(images: images)
     }
     
