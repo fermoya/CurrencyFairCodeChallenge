@@ -9,6 +9,7 @@
 import Foundation
 
 public typealias ImageId = UInt
+public typealias ImageCollection = [Image.Size: String]
 
 public struct Image {
     
@@ -21,9 +22,9 @@ public struct Image {
     }
     
     public var id: ImageId
-    public var urls: [Size: String]
+    public var urls: ImageCollection
     
-    public init(id: ImageId, urls: [Size: String] = [:]) {
+    public init(id: ImageId, urls: ImageCollection = [:]) {
         self.id = id
         self.urls = urls
     }

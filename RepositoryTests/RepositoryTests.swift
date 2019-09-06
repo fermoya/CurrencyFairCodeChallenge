@@ -7,28 +7,102 @@
 //
 
 import XCTest
+import Mockingjay
 @testable import Repository
 
 class RepositoryTests: XCTestCase {
 
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    private var dataStore = FlickrWebservice()
+    
+    private var searchGalleryResponse: [String: Any] = [
+        "photos": [
+            "page": 1,
+            "pages": 4330,
+            "perpage": 100,
+            "total": "432944",
+            "photo": [
+                [
+                    "id": "48687202342"
+                ]
+            ]
+        ]
+    ]
+    
+    private var imageDetailResponse: [String: Any] = [
+        "sizes": [
+            "size": [
+                [
+                    "label": "Square",
+                    "source": "https://live.staticflickr.com/65535/48684267196_de736c604b_s.jpg"
+                ]
+            ]
+        ]
+    ]
+    
+    func testSearchTagRequest() {
+        let tag = "kitties"
+        let page: UInt = 1
+        let apiKey = dataStore.apiKey
+        
+        stub(uri(FlickrEndpoint.searchTag(tag: tag, page: page, apiKey: apiKey).url),
+             json(searchGalleryResponse))
+        
+        let expectation = XCTestExpectation(description: "Fetching tag images")
+        
+        dataStore.searchGallery(by: tag, page: page) { (response) in
+            guard let gallery = try? response.get() else {
+                return XCTFail()
+            }
+            
+            XCTAssertFalse(gallery.images.isEmpty)
+            expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 1)
+    }
+    
+    func testImageDetailRequest() {
+        let imageId: UInt = 48687202342
+        let apiKey = dataStore.apiKey
+        
+        stub(uri(FlickrEndpoint.imageDetail(id: imageId, apiKey: apiKey).url),
+             json(imageDetailResponse))
+        
+        let expectation = XCTestExpectation(description: "Fetching image detail")
+        
+        dataStore.searchImageDetail(id: imageId) { (response) in
+            guard let sizes = try? response.get() else {
+                return XCTFail()
+            }
+            
+            XCTAssertFalse(sizes.urls.isEmpty)
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 1)
+    }
+    
+    func testResponseForbidden() {
+        let imageId: UInt = 48687202342
+        let apiKey = dataStore.apiKey
+        
+        stub(uri(FlickrEndpoint.imageDetail(id: imageId, apiKey: apiKey).url),
+             http(403))
+        
+        let expectation = XCTestExpectation(description: "Mocking forbidden response")
+        
+        dataStore.searchImageDetail(id: imageId) { (response) in
+            switch response {
+            case .success:
+                XCTFail()
+            case .failure(let error):
+                XCTAssertEqual(error, .forbidden)
+            }
+            
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 1)
     }
 
 }
