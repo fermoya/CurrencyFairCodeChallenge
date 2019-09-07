@@ -10,6 +10,10 @@ import Foundation
 
 public final class RepositoryContainer {
     
+    public var dataStore: DataStore {
+        return FlickrWebservice()
+    }
+    
     public init() { }
     
 }

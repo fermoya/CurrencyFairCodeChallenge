@@ -42,23 +42,28 @@ class RepositoryTests: XCTestCase {
     func testSearchTagRequest() {
         let tag = "kitties"
         let page: UInt = 1
+        let imageId: UInt = 48687202342
         let apiKey = dataStore.apiKey
         
         stub(uri(FlickrEndpoint.searchTag(tag: tag, page: page, apiKey: apiKey).url),
              json(searchGalleryResponse))
+        stub(uri(FlickrEndpoint.imageDetail(id: imageId, apiKey: apiKey).url),
+             json(imageDetailResponse))
         
         let expectation = XCTestExpectation(description: "Fetching tag images")
         
         dataStore.searchGallery(by: tag, page: page) { (response) in
-            guard let gallery = try? response.get() else {
+            guard let newPage = try? response.get() else {
                 return XCTFail()
             }
             
+            let gallery = newPage.gallery
             XCTAssertFalse(gallery.images.isEmpty)
+            XCTAssertFalse(gallery.images.first!.urls.isEmpty)
             expectation.fulfill()
         }
         
-        wait(for: [expectation], timeout: 1)
+        wait(for: [expectation], timeout: 3)
     }
     
     func testImageDetailRequest() {
