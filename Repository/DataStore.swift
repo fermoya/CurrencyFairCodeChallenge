@@ -21,10 +21,11 @@ public enum DataStoreError: Error, Equatable {
     case noInternetConnection
 }
 
-public typealias SearchGalleryResponse = Result<Gallery, DataStoreError>
+public typealias GalleryPage = (gallery: Gallery, totalPages: UInt)
+public typealias GalleryPageResponse = Result<GalleryPage, DataStoreError>
 public typealias ImageDetailResponse = Result<Image, DataStoreError>
 
 public protocol DataStore {
-    func searchGallery(by tag: String, page: UInt, completion: @escaping (SearchGalleryResponse) -> Void)
+    func searchGallery(by tag: String, page: UInt, completion: @escaping (GalleryPageResponse) -> Void)
     func searchImageDetail(id: ImageId, completion: @escaping (ImageDetailResponse) -> Void)
 }

@@ -15,23 +15,57 @@ typealias HttpDataResult = Swift.Result<Data, DataStoreError>
 
 public class FlickrWebservice: DataStore {
     
-    private var reachability = Reachability()
+    private let reachability = Reachability()
+    private let sessionManager: SessionManager
     
     var apiKey: String {
         let infoDictionary = Bundle(for: type(of: self)).infoDictionary
         return infoDictionary?["FLICKR_API_KEY"] as? String ?? ""
     }
     
-    public func searchGallery(by tag: String, page: UInt, completion: @escaping (SearchGalleryResponse) -> Void) {
+    init() {
+        let configuration = URLSessionConfiguration.default
+        configuration.requestCachePolicy = .returnCacheDataElseLoad
+        sessionManager = SessionManager(configuration: configuration)
+    }
+    
+    public func searchGallery(by tag: String, page: UInt, completion: @escaping (GalleryPageResponse) -> Void) {
         
         let endpoint: FlickrEndpoint = .searchTag(tag: tag, page: page, apiKey: apiKey)
-        get(from: endpoint) { (result) in
-            let newResult: SearchGalleryResponse = result.map { data in
+        get(from: endpoint) { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                return completion(.failure(error))
+            case .success(let data):
                 let photosWrapper = try! JSONDecoder().decode(PhotosWrapper.self, from: data)
-                return photosWrapper.gallery
+                return self.searchImageDetails(photos: photosWrapper, completion: completion)
             }
-            completion(newResult)
         }
+    }
+    
+    private func searchImageDetails(photos: PhotosWrapper, completion: @escaping (GalleryPageResponse) -> Void) {
+        
+        let group = DispatchGroup()
+        var images = [Image]()
+        
+        let queue = DispatchQueue(label: "image fetcher", qos: .userInitiated)
+        
+        for id in photos.imageIds {
+            group.enter()
+            searchImageDetail(id: id) { (response) in
+                guard let image = try? response.get() else { return }
+                queue.sync {
+                    images.append(image)
+                    group.leave()
+                }
+            }
+        }
+        
+        group.notify(queue: .main) {
+            completion(.success((Gallery(images: images), photos.pages)))
+        }
+        
     }
     
     public func searchImageDetail(id: ImageId, completion: @escaping (ImageDetailResponse) -> Void) {
@@ -50,7 +84,7 @@ public class FlickrWebservice: DataStore {
             return completion(.failure(.noInternetConnection))
         }
         
-        request(endpoint.url)
+        sessionManager.request(endpoint.url)
             .responseJSON { [weak self] (dataResponse) in
                 guard let self = self else { return }
                 let result = self.processHttpResponse(dataResponse)

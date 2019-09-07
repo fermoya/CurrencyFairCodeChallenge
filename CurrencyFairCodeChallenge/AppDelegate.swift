@@ -12,8 +12,14 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    private var appContainer = AppContainer()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        window = appContainer.window
+        window?.rootViewController = appContainer.rootViewController
+        window?.makeKeyAndVisible()
+        
         return true
     }
 
