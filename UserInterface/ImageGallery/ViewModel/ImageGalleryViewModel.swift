@@ -16,6 +16,7 @@ class ImageGalleryViewModel: ViewModel {
     
     var didObserveGallery: ((Gallery) -> Void)?
     var didObserveGalleryError: ((Error) -> Void)?
+    var didObserveImageError: ((String) -> Void)?
     
     private var dataStorePager: DataStorePager
     private var detailNavigator: ImageDetailNavigator
@@ -27,14 +28,22 @@ class ImageGalleryViewModel: ViewModel {
  
     func userDidSelectItem(at indexPath: IndexPath, context: UIViewController) {
         let image = gallery.image(at: indexPath.row)
-        if let imageUrl = image.url(for: .large) {
-            detailNavigator.navigateDetail(of: imageUrl, from: context)
+        
+        guard let imageUrl = image.url(for: .large) else {
+            didObserveImageError?("No large image available")
+            return
         }
+        
+        detailNavigator.navigateDetail(of: imageUrl, from: context)
     }
     
     private var lastTag: String?
     
     func fetchNewItems(for tag: String) {
+        if let lastTag = lastTag, lastTag != tag {
+            dataStorePager.reset()
+        }
+        
         lastTag = tag
         let tag = tag.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         dataStorePager.searchNewGalleryItems(by: tag) { [weak self] (response) in
@@ -49,7 +58,7 @@ class ImageGalleryViewModel: ViewModel {
     }
     
     func bindCell(_ cell: ImageCollectionViewCell, at indexPath: IndexPath) {
-        if let url = gallery.image(at: indexPath.row).url(for: .square) {
+        if let url = gallery.image(at: indexPath.row).url(for: .largeSquare) {
             cell.url = url
         }
         

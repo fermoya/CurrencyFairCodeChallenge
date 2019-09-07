@@ -10,10 +10,12 @@ import UIKit
 import Domain
 import Kingfisher
 
-class ImageDetailViewController: UIViewController {
+class ImageDetailViewController: DismissableViewController {
+    
+    var didFinish: (() -> Void)?
     
     @IBAction func userDidTapDoneButton(_ sender: Any) {
-        dismiss(animated: true)
+        didFinish?()
     }
     
     @IBOutlet weak var scrollView: UIScrollView! {
@@ -28,7 +30,11 @@ class ImageDetailViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView! {
         didSet {
             if let url = URL(string: imageUrl) {
-                imageView.kf.setImage(with: url)
+                imageView.kf.setImage(with: url) { [weak self] result in
+                    if case .failure = result {
+                        self?.showErrorAlert(message: "There was some error") { self?.didFinish?() }
+                    }
+                }
             }
         }
     }

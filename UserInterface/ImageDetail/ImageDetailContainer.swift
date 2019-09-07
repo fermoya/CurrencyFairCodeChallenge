@@ -10,7 +10,7 @@ import Foundation
 import Domain
 
 protocol ImageDetailViewControllerProvider {
-    func viewController(for imageUrl: String) -> ImageDetailViewController
+    func viewController(for imageUrl: String) -> DismissableViewController
 }
 
 final class ImageDetailContainer {
@@ -19,7 +19,7 @@ final class ImageDetailContainer {
         return ImageDetailNavigator(viewControllerProvider: self)
     }
     
-    func viewController(for imageUrl: String) -> ImageDetailViewController {
+    func viewController(for imageUrl: String) -> DismissableViewController {
         return ImageDetailViewController(imageUrl: imageUrl)
     }
     

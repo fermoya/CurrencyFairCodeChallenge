@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		170088422322E3FB0048A57F /* BusinessUseCasesContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170088412322E3FB0048A57F /* BusinessUseCasesContainer.swift */; };
+		170088442323BB790048A57F /* DIsmissable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170088432323BB790048A57F /* DIsmissable.swift */; };
+		170088462323C15C0048A57F /* UIViewController+UIAlerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170088452323C15C0048A57F /* UIViewController+UIAlerController.swift */; };
 		1783FEE423226E8A00308503 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1783FEE323226E8A00308503 /* AppDelegate.swift */; };
 		1783FEEB23226E8C00308503 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1783FEEA23226E8C00308503 /* Assets.xcassets */; };
 		1783FEEE23226E8C00308503 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1783FEEC23226E8C00308503 /* LaunchScreen.storyboard */; };
@@ -124,6 +126,8 @@
 		05C5FE009FC85BD86105FE62 /* Pods-CurrencyFairCodeChallenge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CurrencyFairCodeChallenge.release.xcconfig"; path = "Target Support Files/Pods-CurrencyFairCodeChallenge/Pods-CurrencyFairCodeChallenge.release.xcconfig"; sourceTree = "<group>"; };
 		0BDCFFFC67590FF072F944E9 /* Pods-RepositoryTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepositoryTests.debug.xcconfig"; path = "Target Support Files/Pods-RepositoryTests/Pods-RepositoryTests.debug.xcconfig"; sourceTree = "<group>"; };
 		170088412322E3FB0048A57F /* BusinessUseCasesContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessUseCasesContainer.swift; sourceTree = "<group>"; };
+		170088432323BB790048A57F /* DIsmissable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIsmissable.swift; sourceTree = "<group>"; };
+		170088452323C15C0048A57F /* UIViewController+UIAlerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+UIAlerController.swift"; sourceTree = "<group>"; };
 		1783FEE023226E8A00308503 /* CurrencyFairCodeChallenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CurrencyFairCodeChallenge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1783FEE323226E8A00308503 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1783FEEA23226E8C00308503 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -404,6 +408,7 @@
 				1783FF622322B81900308503 /* NSObject+Utils.swift */,
 				1783FF712322C09100308503 /* Gallery+Utils.swift */,
 				1783FF732322C1E800308503 /* Image+Utils.swift */,
+				170088452323C15C0048A57F /* UIViewController+UIAlerController.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -430,6 +435,7 @@
 			children = (
 				1783FF6E2322BABA00308503 /* Bindable.swift */,
 				1783FF6D2322BABA00308503 /* EmptyStateView.swift */,
+				170088432323BB790048A57F /* DIsmissable.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -967,6 +973,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1783FF5B2322B3DE00308503 /* ImageGalleryContainer.swift in Sources */,
+				170088462323C15C0048A57F /* UIViewController+UIAlerController.swift in Sources */,
 				1783FF672322B89900308503 /* ImageCollectionViewCell.swift in Sources */,
 				1783FF7D2322D52100308503 /* ImageDetailNavigator.swift in Sources */,
 				1783FF782322D3E200308503 /* ImageDetailViewController.swift in Sources */,
@@ -978,6 +985,7 @@
 				1783FF632322B81900308503 /* NSObject+Utils.swift in Sources */,
 				1783FF742322C1E800308503 /* Image+Utils.swift in Sources */,
 				1783FF6B2322BA6E00308503 /* ImageGalleryViewModel.swift in Sources */,
+				170088442323BB790048A57F /* DIsmissable.swift in Sources */,
 				1783FF6F2322BABA00308503 /* EmptyStateView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -17,7 +17,12 @@ class ImageDetailNavigator {
     }
     
     func navigateDetail(of imageUrl: String, from parent: UIViewController) {
-        let viewController = viewControllerProvider.viewController(for: imageUrl)
+        var viewController = viewControllerProvider.viewController(for: imageUrl)
+        
+        weak var weakViewController = viewController
+        viewController.didFinish = {
+            weakViewController?.dismiss(animated: true)
+        }
         parent.present(viewController, animated: true)
     }
     

@@ -82,6 +82,9 @@ class ImageGalleryViewController: UIViewController, Bindable {
             self.emptyStateView.text = error.localizedDescription
         }
         
+        weak var weakSelf = self
+        viewModel.didObserveImageError = weakSelf?.showErrorAlert
+        
         emptyStateView.didTap = { [weak self] in
             guard let self = self else { return }
             self.activityIndicator.startAnimating()

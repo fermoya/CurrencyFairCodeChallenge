@@ -23,6 +23,12 @@ public class DataStorePager {
         self.dataStore = dataStore
     }
     
+    public func reset() {
+        page = 1
+        isPagingEnabled = true
+        gallery = Gallery(images: [])
+    }
+    
     public func searchNewGalleryItems(by tag: String, completion: @escaping (SearchGalleryResponse) -> Void) {
         guard isPagingEnabled else { return completion(.success(gallery)) }
         
